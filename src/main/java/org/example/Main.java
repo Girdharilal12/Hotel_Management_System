@@ -13,5 +13,5 @@ public class Main {
         hotelManagementSystem.runHotelManagementSystem(session, sc);
         sc.close();
         HibernateUtil.closeFactoryAndSession(session);
-    }
+    }//modify commit msg
 }
