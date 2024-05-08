@@ -16,7 +16,7 @@ public class RoomsAndFloors {
     public void addRoomsPriceAndType(Session session, Scanner sc){
         Transaction tx = session.beginTransaction();
         RoomType[] roomTypes ={RoomType.STANDARD,RoomType.MODERATE,RoomType.SUPERIOR,RoomType.JUNIOR_SUITE,RoomType.SUITE};
-        boolean isError = false;
+        boolean isError;
         for (RoomType roomType : roomTypes) {
             RoomCategory roomCategory = new RoomCategory();
             do {
@@ -50,9 +50,9 @@ public class RoomsAndFloors {
                 try {
                     System.out.print("Please add number of " + roomType + " rooms: ");
                     int input = sc.nextInt();
-                    if(input>0) {
+                    if(input>=0) {
                         RoomCategory roomCategory = getRoom(roomType, session);
-                        for (int j = 0; j < input; j++) {
+                        for (int j = -1; j < input-1; j++) {
                             RoomDetail roomDetail = new RoomDetail();
                             roomDetail.setFloor(floor);
                             roomDetail.setAvailable(true);
@@ -124,11 +124,14 @@ public class RoomsAndFloors {
             if (isValid) {
                 addRoomsInFloor(sc, session, floor);
             }else {
-                System.out.println("Invalid floor input. Please provide a positive floor number.");
+                System.out.println("Invalid floor input. Please provide a available floor number.");
             }
         }while (!isValid);
     }
     public void updatePriceList(Session session, Scanner sc){
+        int input = 0;
+        float price = 0;
+        boolean isValid = false;
         Transaction tx = session.beginTransaction();
         Query query = session.createQuery("From RoomCategory");
         List<RoomCategory> list = query.list();
@@ -136,10 +139,26 @@ public class RoomsAndFloors {
         for(RoomCategory roomCategory : list){
             System.out.println(++numList +". "+ roomCategory.getRoomType() +" "+ roomCategory.getPrice());
         }
-        System.out.print("Enter number to select type: ");
-        int input = sc.nextInt();
-        System.out.print("Enter new price: ");
-        float price = sc.nextFloat();
+        do {
+            try {
+                System.out.print("Enter number to select type: ");
+                input = sc.nextInt();
+                if(input>list.size() || input<=0) {
+                    System.out.println("Enter a valid number for the account type.");
+                    continue;
+                }
+                System.out.print("Enter new price: ");
+                price = sc.nextFloat();
+                if(price<=0){
+                    System.out.println("Enter a valid price.");
+                    continue;
+                }
+                isValid = true;
+            }catch (InputMismatchException e){
+                System.out.println("Invalid input! Please enter again.");
+                sc.next();
+            }
+        }while (!isValid);
         for(RoomCategory roomCategory : list){
             if(roomCategory.getId()==input){
                 roomCategory.setPrice(price);
