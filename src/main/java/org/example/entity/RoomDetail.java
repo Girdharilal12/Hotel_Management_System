@@ -14,35 +14,35 @@ import javax.persistence.Table;
 public class RoomDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
-    private int id;
+    @Column(name = "room_id", nullable = false)
+    private int RoomId;
     @Column(name = "floor", nullable = false)
     private int floor;
     @ManyToOne
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room room;
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private RoomCategory roomCategory;
     @Column(name = "available", nullable = false)
     private boolean available;
     public int getId() {
-        return id;
+        return RoomId;
     }
     public int getFloor() {
         return floor;
     }
-    public Room getRoom() {
-        return room;
+    public RoomCategory getRoom() {
+        return roomCategory;
     }
     public boolean isAvailable() {
         return available;
     }
     public void setId(int id) {
-        this.id = id;
+        this.RoomId = id;
     }
     public void setFloor(int floor) {
         this.floor = floor;
     }
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoom(RoomCategory roomCategory) {
+        this.roomCategory = roomCategory;
     }
     public void setAvailable(boolean available) {
         this.available = available;

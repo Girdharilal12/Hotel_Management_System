@@ -1,7 +1,5 @@
 package org.example.entity;
 
-
-
 import org.example.constant.RoomType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "room")
-public class Room {
+@Table(name = "room_category")
+public class RoomCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)

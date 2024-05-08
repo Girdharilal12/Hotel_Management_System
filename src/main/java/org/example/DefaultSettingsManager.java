@@ -1,8 +1,9 @@
 package org.example;
 
 import org.example.constant.RoomType;
-import org.example.entity.Room;
+import org.example.entity.RoomCategory;
 import org.example.entity.RoomDetail;
+import org.example.Management.RoomAndFloorManagement;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -11,7 +12,7 @@ import java.util.Scanner;
 
 public class DefaultSettingsManager {
     public void checkExistingDetails(Session session, Scanner sc) {
-        Query query = session.createQuery("From Room");
+        Query query = session.createQuery("From RoomCategory");
         List<RoomDetail> list = query.list();
         if(list.isEmpty()){
             System.out.print("Do you want go with predefined floor & room plan (y/n): ");
@@ -23,6 +24,7 @@ public class DefaultSettingsManager {
                 RoomAndFloorManagement roomAndFloorManagement = new RoomAndFloorManagement();
                 roomAndFloorManagement.manageRoomAndFloor(sc, session);
             }else {
+                System.out.println("Invalid input. Enter again");
                 checkExistingDetails(session,sc);
             }
         }
@@ -33,15 +35,15 @@ public class DefaultSettingsManager {
         float[] price = {3000,5000,10000,20000,50000};
         int floor = 0;
         for(int i=0;i<5;i++){
-            Room room = new Room();
-            room.setRoomType(roomTypes[i]);
-            room.setPrice(price[i]);
-            session.save(room);
+            RoomCategory roomCategory = new RoomCategory();
+            roomCategory.setRoomType(roomTypes[i]);
+            roomCategory.setPrice(price[i]);
+            session.save(roomCategory);
             floor++;
             for(int j=0;j<10;j++){
                 RoomDetail roomDetail = new RoomDetail();
                 roomDetail.setFloor(floor);
-                roomDetail.setRoom(room);
+                roomDetail.setRoom(roomCategory);
                 roomDetail.setAvailable(true);
                 session.save(roomDetail);
             }
