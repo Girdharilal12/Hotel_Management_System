@@ -30,22 +30,25 @@ public class DefaultSettingsManager {
         }
     }
     public void setDefaultSettings(Session session){
+        RoomReservation roomReservation = new RoomReservation();
         Transaction tx = session.beginTransaction();
         RoomType[] roomTypes ={RoomType.STANDARD,RoomType.MODERATE,RoomType.SUPERIOR,RoomType.JUNIOR_SUITE,RoomType.SUITE};
         float[] price = {3000,5000,10000,20000,50000};
-        int floor = 0;
-        for(int i=0;i<5;i++){
+        for (int i=0;i<5;i++){
             RoomCategory roomCategory = new RoomCategory();
             roomCategory.setRoomType(roomTypes[i]);
             roomCategory.setPrice(price[i]);
             session.save(roomCategory);
-            floor++;
-            for(int j=0;j<10;j++){
-                RoomDetail roomDetail = new RoomDetail();
-                roomDetail.setFloor(floor);
-                roomDetail.setRoom(roomCategory);
-                roomDetail.setAvailable(true);
-                session.save(roomDetail);
+        }
+        for(int k = 0; k < 5; k++) {
+            for (int i = 0; i < 5; i++) {
+                RoomCategory roomCategory = roomReservation.getRoomCategory(roomTypes[i], session);
+                for (int j = 1; j <= 10; j++) {
+                    RoomDetail roomDetail = new RoomDetail();
+                    roomDetail.setFloor(k+1);
+                    roomDetail.setRoom(roomCategory);
+                    session.save(roomDetail);
+                }
             }
         }
         tx.commit();

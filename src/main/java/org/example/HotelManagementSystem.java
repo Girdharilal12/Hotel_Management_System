@@ -11,6 +11,7 @@ public class HotelManagementSystem {
             System.out.print("""
                     Welcome to the Hotel Management System
                     1. Floor & Room setting
+                    2. Reservation
                     """);
             System.out.print("Enter number: ");
             try {
@@ -18,7 +19,10 @@ public class HotelManagementSystem {
                 if(num==1){
                     RoomAndFloorManagement roomAndFloorManagement = new RoomAndFloorManagement();
                     roomAndFloorManagement.manageRoomAndFloor(sc, session);
-                }else {
+                } else if(num==2) {
+                    RoomReservation roomReservation = new RoomReservation();
+                    roomReservation.inputReservationRoom(session, sc, null);
+                } else {
                     break;
                 }
             }catch(InputMismatchException e){

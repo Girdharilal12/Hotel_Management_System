@@ -55,7 +55,6 @@ public class RoomsAndFloors {
                         for (int j = -1; j < input-1; j++) {
                             RoomDetail roomDetail = new RoomDetail();
                             roomDetail.setFloor(floor);
-                            roomDetail.setAvailable(true);
                             roomDetail.setRoom(roomCategory);
                             session.save(roomDetail);
                             isError = false;

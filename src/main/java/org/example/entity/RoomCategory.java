@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class RoomCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, unique = true)
+    @Column(name = "id", nullable = false)
     private int id;
     @Enumerated(EnumType.STRING)
     @Column(name = "room_type", nullable = false)

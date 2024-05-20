@@ -21,8 +21,6 @@ public class RoomDetail {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private RoomCategory roomCategory;
-    @Column(name = "available", nullable = false)
-    private boolean available;
     public int getId() {
         return RoomId;
     }
@@ -32,9 +30,6 @@ public class RoomDetail {
     public RoomCategory getRoom() {
         return roomCategory;
     }
-    public boolean isAvailable() {
-        return available;
-    }
     public void setId(int id) {
         this.RoomId = id;
     }
@@ -43,8 +38,5 @@ public class RoomDetail {
     }
     public void setRoom(RoomCategory roomCategory) {
         this.roomCategory = roomCategory;
-    }
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 }
