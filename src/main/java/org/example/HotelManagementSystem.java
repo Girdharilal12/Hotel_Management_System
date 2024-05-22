@@ -21,7 +21,7 @@ public class HotelManagementSystem {
                     roomAndFloorManagement.manageRoomAndFloor(sc, session);
                 } else if(num==2) {
                     RoomReservation roomReservation = new RoomReservation();
-                    roomReservation.inputReservationRoom(session, sc, null);
+                    roomReservation.processRoomReservation(session, sc, null);
                 } else {
                     break;
                 }

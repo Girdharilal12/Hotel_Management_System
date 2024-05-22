@@ -17,40 +17,57 @@ import java.util.Scanner;
 
 public class RoomReservation {
     InputValidator inputValidator = new InputValidator();
-    public CustomerRecords checkExistingCustomer(Session session, Scanner sc, String id){
-        Query query = session.createQuery("From CustomerRecords where idCard =: id");
-        query.setParameter("id", id);
-        CustomerRecords customerRecords = (CustomerRecords) query.uniqueResult();
-        return customerRecords;
+    public void processRoomReservation(Session session, Scanner sc, String id){
+        CustomerRecords customerRecords = getCustomerDetail(session, sc, id);
+        RoomType roomType = inputValidator.getRoomType(sc);
+        RoomCategory roomCategory = getRoomCategory(roomType, session);
+        int rooms = inputValidator.inputNumberOfRooms(sc);
+        int days = inputValidator.inputDaysToBook(sc);
+        String checkIn = inputValidator.checkIn(sc);
+        String checkOut = inputValidator.checkOut(checkIn, sc, days);
+        List<RoomDetail> availableRooms = findRooms(roomCategory ,session);
+        if (availableRooms.isEmpty()) {
+            System.out.println(roomCategory.getRoomType() +" not exist in hotel");
+        }else {
+            setReservationDetails(availableRooms, sc , session, checkIn, checkOut, customerRecords, rooms);
+        }
     }
     public CustomerRecords getCustomerDetail(Session session, Scanner sc, String id){
         if(id == null) {
             id = inputValidator.extractIDCardNumber(sc);
         }
-        CustomerRecords customerRecords = checkExistingCustomer(session, sc, id);
+        CustomerRecords customerRecords = checkExistingCustomer(session, id);
         if(customerRecords == null) {
-            Transaction tx = session.beginTransaction();
-            customerRecords = new CustomerRecords();
-            String fullName = inputValidator.extractFullName(sc);
-            Gender gender = inputValidator.getGender(sc);
-            customerRecords.setFullName(fullName);
-            customerRecords.setGender(gender);
-            customerRecords.setIdCard(id);
-            session.save(customerRecords);
-            tx.commit();
+            customerRecords = createNewCustomer(session, sc, id);
         }
         return customerRecords;
     }
-    public void inputReservationRoom(Session session, Scanner sc, String id){
-        CustomerRecords customerRecords = getCustomerDetail(session, sc, id);
-        List<RoomDetail> list = listOfRooms(session, id, sc);
-        int rooms = inputValidator.inputNumberOfRooms(sc);
-        int days = inputValidator.inputDaysToBook(sc);
-        String checkIn = inputValidator.checkIn(sc);
-        String checkOut = inputValidator.checkOut(checkIn, sc, days);
-        checkAvailability(list, session, checkIn, checkOut, customerRecords, sc, rooms);
+    public CustomerRecords checkExistingCustomer(Session session, String id){
+        Query query = session.createQuery("FROM CustomerRecords WHERE idCard = :id");
+        query.setParameter("id", id);
+        CustomerRecords customerRecords = (CustomerRecords) query.uniqueResult();
+        return customerRecords;
     }
-    public void checkAvailability(List<RoomDetail> list, Session session, String checkIn, String checkOut, CustomerRecords customerRecords, Scanner sc, int rooms){
+    public CustomerRecords createNewCustomer(Session session, Scanner sc, String id) {
+        Transaction tx = session.beginTransaction();
+        CustomerRecords customerRecords = new CustomerRecords();
+        String fullName = inputValidator.extractFullName(sc);
+        Gender gender = inputValidator.getGender(sc);
+        customerRecords.setFullName(fullName);
+        customerRecords.setGender(gender);
+        customerRecords.setIdCard(id);
+        session.save(customerRecords);
+        tx.commit();
+        return customerRecords;
+    }
+    public List<RoomDetail> findRooms(RoomCategory roomCategory, Session session){
+        Query query = session.createSQLQuery("SELECT * FROM room_detail WHERE category_id = :categoryId")
+                .addEntity(RoomDetail.class)
+                .setParameter("categoryId", roomCategory.getId());
+        List<RoomDetail> availableRooms = query.list();
+        return availableRooms;
+    }
+    public List<RoomDetail> checkAvailability(List<RoomDetail> list, Session session, String checkIn, String checkOut, CustomerRecords customerRecords, Scanner sc, int rooms){
         DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime checkInTime = LocalDateTime.parse(checkIn, myFormatObj);
         LocalDateTime checkOutTime = LocalDateTime.parse(checkOut, myFormatObj);
@@ -71,39 +88,25 @@ public class RoomReservation {
                 arrayRoomDetail.add(roomDetail);
             }
         }
+        return arrayRoomDetail;
+    }
+    public void setReservationDetails(List<RoomDetail> list,Scanner sc ,Session session, String checkIn, String checkOut, CustomerRecords customerRecords, int rooms){
+        List<RoomDetail> arrayRoomDetail = checkAvailability(list, session, checkIn, checkOut, customerRecords, sc, rooms);
         if(arrayRoomDetail.size() == rooms){
-            setReservationDetails(sc ,session, arrayRoomDetail, checkIn, checkOut, customerRecords);
+            for(RoomDetail roomDetail: arrayRoomDetail){
+                Transaction tx = session.beginTransaction();
+                ReservationDetails reservationDetails = new ReservationDetails();
+                reservationDetails.setCheckIn(checkIn);
+                reservationDetails.setCheckOut(checkOut);
+                reservationDetails.setRoomDetail(roomDetail);
+                reservationDetails.setCustomerRecords(customerRecords);
+                session.save(reservationDetails);
+                tx.commit();
+            }
+            System.out.println("Room book successfully");
         }else {
             System.out.println("Room is not available");
         }
-    }
-    public List<RoomDetail> listOfRooms(Session session, String id, Scanner sc){
-        RoomType roomType = inputValidator.getRoomType(sc);
-        RoomCategory roomCategory = getRoomCategory(roomType, session);
-        Query query = session.createSQLQuery("SELECT * FROM room_detail WHERE category_id = :categoryId")
-                .addEntity(RoomDetail.class)
-                .setParameter("categoryId", roomCategory.getId());
-        List<RoomDetail> list = query.list();
-        if(list.isEmpty()){
-            System.out.println(roomCategory.getRoomType() +" is not available");
-            inputReservationRoom(session, sc, id);
-            return null;
-        }
-        return list;
-    }
-    public void setReservationDetails(Scanner sc ,Session session, List<RoomDetail> arrayRoomDetail, String checkIn, String checkOut, CustomerRecords customerRecords){
-        ReservationDetails reservationDetails;
-        for(RoomDetail roomDetail: arrayRoomDetail){
-            Transaction tx = session.beginTransaction();
-            reservationDetails = new ReservationDetails();
-            reservationDetails.setCheckIn(checkIn);
-            reservationDetails.setCheckOut(checkOut);
-            reservationDetails.setRoomDetail(roomDetail);
-            reservationDetails.setCustomerRecords(customerRecords);
-            session.save(reservationDetails);
-            tx.commit();
-        }
-        System.out.println("Room book successfully");
         askToBookAnotherRoom(session, sc, customerRecords);
     }
     public void askToBookAnotherRoom(Session session, Scanner sc, CustomerRecords customerRecords){
@@ -111,7 +114,7 @@ public class RoomReservation {
         char input = sc.next().charAt(0);
         if(input=='y'){
             String id = customerRecords.getIdCard();
-            inputReservationRoom(session, sc, id);
+            processRoomReservation(session, sc, id);
         }
     }
     public RoomCategory getRoomCategory( RoomType roomType, Session session){

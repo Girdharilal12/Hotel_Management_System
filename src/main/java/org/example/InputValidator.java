@@ -2,7 +2,6 @@ package org.example;
 
 import org.example.constant.Gender;
 import org.example.constant.RoomType;
-
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -42,7 +41,7 @@ public class InputValidator {
         return matcher.group();
     }
     public Gender getGender(Scanner sc){
-        Gender gender = null;
+        Gender gender;
         do {
             System.out.print("Enter gender: ");
             String input = sc.next();
@@ -86,7 +85,7 @@ public class InputValidator {
                 LocalDate date = LocalDate.parse(input, myFormatObj);
                 break;
             }catch(DateTimeException e){
-                System.out.println(e.getMessage() + " Enter again");
+                System.out.println("Enter valid date of check in again example: 01-01-2024");
             }
         }while (true);
         time = input+" "+checkInHour(sc);
@@ -96,7 +95,7 @@ public class InputValidator {
         int hour;
         String time;
         do {
-            System.out.print("Please enter the hour in 24-hour format (0-23): ");
+            System.out.print("Please enter the check in hour in 24-hour format (0-23): ");
             hour = sc.nextInt();
             if (hour > 0 && hour < 23){
                 break;
