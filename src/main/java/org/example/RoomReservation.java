@@ -20,11 +20,11 @@ public class RoomReservation {
     public void processRoomReservation(Session session, Scanner sc, String id){
         CustomerRecords customerRecords = getCustomerDetail(session, sc, id);
         RoomType roomType = inputValidator.getRoomType(sc);
-        RoomCategory roomCategory = getRoomCategory(roomType, session);
         int rooms = inputValidator.inputNumberOfRooms(sc);
         int days = inputValidator.inputDaysToBook(sc);
         String checkIn = inputValidator.checkIn(sc);
         String checkOut = inputValidator.checkOut(checkIn, sc, days);
+        RoomCategory roomCategory = getRoomCategory(roomType, session);
         List<RoomDetail> availableRooms = findRooms(roomCategory ,session);
         if (availableRooms.isEmpty()) {
             System.out.println(roomCategory.getRoomType() +" not exist in hotel");
@@ -67,29 +67,6 @@ public class RoomReservation {
         List<RoomDetail> availableRooms = query.list();
         return availableRooms;
     }
-    public List<RoomDetail> checkAvailability(List<RoomDetail> list, Session session, String checkIn, String checkOut, CustomerRecords customerRecords, Scanner sc, int rooms){
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        LocalDateTime checkInTime = LocalDateTime.parse(checkIn, myFormatObj);
-        LocalDateTime checkOutTime = LocalDateTime.parse(checkOut, myFormatObj);
-        List<RoomDetail> arrayRoomDetail = new ArrayList<>();
-        for(RoomDetail roomDetail : list){
-            boolean isValid = true;
-            Query query = session.createSQLQuery("Select * from reservation_details where room_id = '"+roomDetail.getId()+"'")
-                    .addEntity(ReservationDetails.class);
-            List<ReservationDetails> reservationDetailsList = query.list();
-            for(ReservationDetails reservationDetails : reservationDetailsList) {
-                LocalDateTime tableCheckInTime = LocalDateTime.parse(reservationDetails.getCheckIn(), myFormatObj);
-                LocalDateTime tableCheckOutTime = LocalDateTime.parse(reservationDetails.getCheckOut(), myFormatObj);
-                if(!(checkOutTime.isBefore(tableCheckInTime) || checkInTime.isAfter(tableCheckOutTime))) {
-                    isValid = false;
-                }
-            }
-            if(isValid && arrayRoomDetail.size() < rooms){
-                arrayRoomDetail.add(roomDetail);
-            }
-        }
-        return arrayRoomDetail;
-    }
     public void setReservationDetails(List<RoomDetail> list,Scanner sc ,Session session, String checkIn, String checkOut, CustomerRecords customerRecords, int rooms){
         List<RoomDetail> arrayRoomDetail = checkAvailability(list, session, checkIn, checkOut, customerRecords, sc, rooms);
         if(arrayRoomDetail.size() == rooms){
@@ -108,6 +85,31 @@ public class RoomReservation {
             System.out.println("Room is not available");
         }
         askToBookAnotherRoom(session, sc, customerRecords);
+    }
+    public List<RoomDetail> checkAvailability(List<RoomDetail> list, Session session, String checkIn, String checkOut, CustomerRecords customerRecords, Scanner sc, int rooms){
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime checkInTime = LocalDateTime.parse(checkIn, myFormatObj);
+        LocalDateTime checkOutTime = LocalDateTime.parse(checkOut, myFormatObj);
+        List<RoomDetail> arrayRoomDetail = new ArrayList<>();
+        for(RoomDetail roomDetail : list){
+            if(isRoomAvailable(session, checkInTime, checkOutTime, roomDetail, myFormatObj) && arrayRoomDetail.size() < rooms){
+                arrayRoomDetail.add(roomDetail);
+            }
+        }
+        return arrayRoomDetail;
+    }
+    public boolean isRoomAvailable(Session session, LocalDateTime checkInTime, LocalDateTime checkOutTime, RoomDetail roomDetail, DateTimeFormatter myFormatObj){
+        Query query = session.createSQLQuery("Select * from reservation_details where room_id = '"+roomDetail.getId()+"'")
+                .addEntity(ReservationDetails.class);
+        List<ReservationDetails> reservationDetailsList = query.list();
+        for(ReservationDetails reservationDetails : reservationDetailsList) {
+            LocalDateTime tableCheckInTime = LocalDateTime.parse(reservationDetails.getCheckIn(), myFormatObj);
+            LocalDateTime tableCheckOutTime = LocalDateTime.parse(reservationDetails.getCheckOut(), myFormatObj);
+            if(!(checkOutTime.isBefore(tableCheckInTime) || checkInTime.isAfter(tableCheckOutTime))) {
+                return  false;
+            }
+        }
+        return true;
     }
     public void askToBookAnotherRoom(Session session, Scanner sc, CustomerRecords customerRecords){
         System.out.print("Do you want book another room (y/n): ");
