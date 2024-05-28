@@ -1,9 +1,10 @@
 package org.example;
 
-import org.example.constant.RoomType;
+import org.example.service.ReservationServices;
+import org.example.Constant.RoomType;
 import org.example.entity.RoomCategory;
 import org.example.entity.RoomDetail;
-import org.example.Management.RoomAndFloorManagement;
+import org.example.management.RoomAndFloorManagement;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -30,7 +31,7 @@ public class DefaultSettingsManager {
         }
     }
     public void setDefaultSettings(Session session){
-        RoomReservation roomReservation = new RoomReservation();
+        ReservationServices reservationServices = new ReservationServices();
         Transaction tx = session.beginTransaction();
         RoomType[] roomTypes ={RoomType.STANDARD,RoomType.MODERATE,RoomType.SUPERIOR,RoomType.JUNIOR_SUITE,RoomType.SUITE};
         float[] price = {3000,5000,10000,20000,50000};
@@ -42,7 +43,7 @@ public class DefaultSettingsManager {
         }
         for(int k = 0; k < 5; k++) {
             for (int i = 0; i < 5; i++) {
-                RoomCategory roomCategory = roomReservation.getRoomCategory(roomTypes[i], session);
+                RoomCategory roomCategory = reservationServices.getRoomCategory(roomTypes[i], session);
                 for (int j = 1; j <= 10; j++) {
                     RoomDetail roomDetail = new RoomDetail();
                     roomDetail.setFloor(k+1);

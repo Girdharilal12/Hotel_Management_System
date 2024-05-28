@@ -1,6 +1,6 @@
-package org.example.Management;
+package org.example.management;
 
-import org.example.constant.RoomType;
+import org.example.Constant.RoomType;
 import org.example.entity.RoomCategory;
 import org.example.entity.RoomDetail;
 import org.hibernate.Session;

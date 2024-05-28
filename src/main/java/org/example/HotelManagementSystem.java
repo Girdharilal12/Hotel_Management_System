@@ -1,6 +1,7 @@
 package org.example;
 
-import org.example.Management.RoomAndFloorManagement;
+import org.example.management.RoomAndFloorManagement;
+import org.example.service.ReservationServices;
 import org.hibernate.Session;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -20,8 +21,8 @@ public class HotelManagementSystem {
                     RoomAndFloorManagement roomAndFloorManagement = new RoomAndFloorManagement();
                     roomAndFloorManagement.manageRoomAndFloor(sc, session);
                 } else if(num==2) {
-                    RoomReservation roomReservation = new RoomReservation();
-                    roomReservation.processRoomReservation(session, sc, null);
+                    ReservationServices reservationServices = new ReservationServices();
+                    reservationServices.processRoomReservation(session, sc, null);
                 } else {
                     break;
                 }

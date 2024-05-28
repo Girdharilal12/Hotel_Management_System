@@ -1,6 +1,6 @@
 package org.example.entity;
 
-import org.example.constant.RoomType;
+import org.example.Constant.RoomType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

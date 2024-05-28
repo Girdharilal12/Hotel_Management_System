@@ -21,6 +21,8 @@
         <mapping class="org.example.entity.RoomDetail"/>
         <mapping class="org.example.entity.CustomerRecords"/>
         <mapping class="org.example.entity.ReservationDetails"/>
+        <mapping class="org.example.entity.BookingDetails"/>
+        <mapping class="org.example.entity.Billing"/>
     </session-factory>
 
 </hibernate-configuration>

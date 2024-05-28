@@ -1,6 +1,6 @@
 package org.example.entity;
 
-import org.example.constant.Gender;
+import org.example.Constant.Gender;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

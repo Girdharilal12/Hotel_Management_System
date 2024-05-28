@@ -23,9 +23,6 @@ public class ReservationDetails {
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private CustomerRecords customerRecords;
-    @ManyToOne
-    @JoinColumn(name = "room_id", referencedColumnName = "room_id")
-    private RoomDetail roomDetail;
     public int getId() {
         return id;
     }
@@ -38,9 +35,6 @@ public class ReservationDetails {
     public CustomerRecords getCustomerRecords() {
         return customerRecords;
     }
-    public RoomDetail getRoomDetail() {
-        return roomDetail;
-    }
     public void setCheckIn(String check_in) {
         this.checkIn = check_in;
     }
@@ -49,8 +43,5 @@ public class ReservationDetails {
     }
     public void setCustomerRecords(CustomerRecords customerRecords) {
         this.customerRecords = customerRecords;
-    }
-    public void setRoomDetail(RoomDetail roomDetail) {
-        this.roomDetail = roomDetail;
     }
 }
