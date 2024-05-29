@@ -1,4 +1,4 @@
-package org.example.management;
+package org.example.Management;
 
 import org.hibernate.Session;
 import java.util.InputMismatchException;

@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.FactoryProvider.HibernateUtil;
 import org.hibernate.Session;
 import java.util.Scanner;
 

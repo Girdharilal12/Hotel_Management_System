@@ -17,12 +17,12 @@
 
         <!-- Show SQL in console -->
         <property name="hibernate.show_sql">false</property>
-        <mapping class="org.example.entity.RoomCategory"/>
-        <mapping class="org.example.entity.RoomDetail"/>
-        <mapping class="org.example.entity.CustomerRecords"/>
-        <mapping class="org.example.entity.ReservationDetails"/>
-        <mapping class="org.example.entity.BookingDetails"/>
-        <mapping class="org.example.entity.Billing"/>
+        <mapping class="org.example.Entity.RoomCategory"/>
+        <mapping class="org.example.Entity.RoomDetail"/>
+        <mapping class="org.example.Entity.CustomerRecords"/>
+        <mapping class="org.example.Entity.ReservationDetails"/>
+        <mapping class="org.example.Entity.BookingDetails"/>
+        <mapping class="org.example.Entity.Billing"/>
     </session-factory>
 
 </hibernate-configuration>

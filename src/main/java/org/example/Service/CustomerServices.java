@@ -1,7 +1,7 @@
-package org.example.service;
+package org.example.Service;
 
 import org.example.Constant.Gender;
-import org.example.entity.CustomerRecords;
+import org.example.Entity.CustomerRecords;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

@@ -1,4 +1,4 @@
-package org.example.entity;
+package org.example.Entity;
 
 import org.example.Constant.RoomType;
 import javax.persistence.Column;

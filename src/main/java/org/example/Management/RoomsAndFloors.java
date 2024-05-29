@@ -1,8 +1,8 @@
-package org.example.management;
+package org.example.Management;
 
 import org.example.Constant.RoomType;
-import org.example.entity.RoomCategory;
-import org.example.entity.RoomDetail;
+import org.example.Entity.RoomCategory;
+import org.example.Entity.RoomDetail;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;

@@ -1,14 +1,15 @@
-package org.example.service;
+package org.example.Service;
 
 import org.example.Constant.RoomType;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 public class ReservationInputServices {
     public RoomType getRoomType(Scanner sc){
-        RoomType roomType;
+        RoomType roomType = null;
         do{
             System.out.print("""
                    1. STANDARD,
@@ -18,12 +19,13 @@ public class ReservationInputServices {
                    5. SUITE
                     """);
             System.out.print("Enter Room Type here: ");
-            int input = sc.nextInt();
             try {
+                int input = sc.nextInt();
                 roomType = RoomType.roomType(input);
                 break;
-            }catch(IllegalArgumentException e){
+            }catch(InputMismatchException | IllegalArgumentException e){
                 System.out.println("Enter again valid Room type number");
+                sc.nextLine();
             }
         }while (true);
         return roomType;

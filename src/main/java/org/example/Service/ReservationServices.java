@@ -1,12 +1,12 @@
-package org.example.service;
+package org.example.Service;
 
 import org.example.Constant.RoomType;
-import org.example.entity.Billing;
-import org.example.entity.BookingDetails;
-import org.example.entity.CustomerRecords;
-import org.example.entity.ReservationDetails;
-import org.example.entity.RoomCategory;
-import org.example.entity.RoomDetail;
+import org.example.Entity.Billing;
+import org.example.Entity.BookingDetails;
+import org.example.Entity.CustomerRecords;
+import org.example.Entity.ReservationDetails;
+import org.example.Entity.RoomCategory;
+import org.example.Entity.RoomDetail;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
