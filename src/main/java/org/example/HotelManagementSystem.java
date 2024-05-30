@@ -13,10 +13,12 @@ public class HotelManagementSystem {
         while (true){
             System.out.print("""
                     Welcome to the Hotel Management System
-                    1. Floor & Room setting
+                    1. Floor & room setting
                     2. Reservation
                     3. Customers check in today list
                     4. Customers check out today
+                    5. Reserved rooms and their types
+                    6. Empty rooms and their types
                     """);
             System.out.print("Enter number: ");
             try {
@@ -31,6 +33,10 @@ public class HotelManagementSystem {
                     dailyReport.todayCheckIn(session);
                 }else if(num==4){
                     dailyReport.todayCheckOut(session);
+                }else if(num==5){
+                    dailyReport.reservedRooms(session);
+                }else if(num==6){
+                    dailyReport.getEmptyRoomAndType(session);
                 }else {
                     break;
                 }

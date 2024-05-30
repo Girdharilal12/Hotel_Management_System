@@ -63,7 +63,7 @@ public class ReservationServices {
                 session.save(bookingDetails);
             }
             tx.commit();
-            System.out.println("Room book successfully");
+            System.out.println("Your hava Room booked "+rooms+" successfully");
         }
         askToBookAnotherRoom(session, sc, customerRecords);
     }
@@ -81,7 +81,7 @@ public class ReservationServices {
         return arrayRoomDetail;
     }
     public boolean isRoomAvailable(Session session, LocalDateTime checkInTime, LocalDateTime checkOutTime, RoomDetail roomDetail, DateTimeFormatter myFormatObj){
-        Query query = session.createSQLQuery("Select * from booking_details b, reservation_details r where room_id = '"+roomDetail.getId()+"'")
+        Query query = session.createSQLQuery("Select * from booking_details b inner join reservation_details r on b.reservation_id = r.id  where room_id = '"+roomDetail.getId()+"'")
                 .addEntity(ReservationDetails.class);
         List<ReservationDetails> reservationDetailsList = query.list();
         for(ReservationDetails reservationDetails : reservationDetailsList) {
