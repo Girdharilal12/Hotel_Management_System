@@ -64,6 +64,9 @@ public class ReservationServices {
             }
             tx.commit();
             System.out.println("Your hava Room booked "+rooms+" successfully");
+            for(RoomDetail roomDetail: arrayRoomDetail){
+                System.out.println("Your room id is: " +roomDetail.getId());
+            }
         }
         askToBookAnotherRoom(session, sc, customerRecords);
     }
